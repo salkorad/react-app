@@ -3,6 +3,7 @@ import { read, insert, update, remove } from "../services/apiService";
 
 const Course = ({ match, history }) => {
   const [id] = useState(match.params.id);
+  const [requiredField, setAlert] = useState("");
   const [course, setCourse] = useState({
     _id: "0",
     name: "",
@@ -25,6 +26,9 @@ const Course = ({ match, history }) => {
     history.push("/courses");
   };
   const save = () => {
+    if(!course.name) {
+      setAlert("Can not leave this field empty");
+    } else {
     if (id === "0") {
       delete course._id;
       insert("courses", course, (data) => {
@@ -36,6 +40,7 @@ const Course = ({ match, history }) => {
         if (data) return history.push("/courses");
         console.log("There was an error during saving data");
       });
+    }
     }
   };
   const del = () => {
@@ -56,6 +61,7 @@ const Course = ({ match, history }) => {
             onChange={changeHandler}
           />
         </div>
+        <div className="alert"> {requiredField}</div>
         <div style={{ margin: "12px 0" }}>
           <label htmlFor="points">Course points:</label>
           <input
